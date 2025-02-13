@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 echo "Please enter Root(/) paritition: (example /dev/sda3)"
 read ROOT
