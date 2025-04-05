@@ -33,7 +33,7 @@ mount --mkdir "$HOME" /mnt/home
 mount --mkdir "$WINDOWS" /mnt/W10
 mount --mkdir "$DVOLUME" /mnt/DVolume
 
-pacstrap /mnt base base-devel linux linux-firmware vim --noconfirm --needed
+pacstrap /mnt base base-devel linux linux-firmware vim
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -44,7 +44,7 @@ sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-ln -sf /usr/share/zoneinfo/Asia/Kathmandu /etc/localtime
+ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 hwclock --systohc
 
 echo "ACH" > /etc/hostname
@@ -54,7 +54,7 @@ cat <<EOF > /etc/hosts
 127.0.1.1       ACH.localdomain    ACH
 EOF
 
-pacman -S fuse3 grub networkmanager linux-headers bluez bluez-utils pulseaudio pulseaudio-bluetooth amd-ucode os-prober --noconfirm --needed
+pacman -S git curl fuse3 grub networkmanager linux-headers bluez bluez-utils pulseaudio pulseaudio-bluetooth amd-ucode os-prober
 sed -i 's/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 grub-install --target=i386-pc /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -65,6 +65,11 @@ useradd -mG wheel $USER
 echo $USER:$PASSWORD | chpasswd
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 echo "root":ROOTPASS | chpasswd
+cd /home/${USER}
+git clone https://github.com/Sterliph/arch.git
+cp arch/pkgs/* /var/cache/pacman/pkg/
+cd /var/cache/pacman/pkg
+pacman -U file://linux-6.11.5.arch1-1-x86_64.pkg.tar.zst file://linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst
 exit
 umount -a
 reboot
