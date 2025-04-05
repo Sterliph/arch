@@ -12,13 +12,13 @@ read WINDOWS
 echo "Please enter DVolume paritition (example /dev/sda3): "
 read DVOLUME
 
-echo "Please enter root password"
+echo "Please enter root password: "
 read ROOTPASS
 
-echo "Please enter your username"
+echo "Please enter your username: "
 read USER
 
-echo "Please enter your password"
+echo "Please enter your password: "
 read PASSWORD
 
 mkfs.ext4 "${ROOT}"
