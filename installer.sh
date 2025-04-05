@@ -1,24 +1,24 @@
 #!/bin/bash
 
-echo "Please enter Root(/) paritition: (example /dev/sda3)"
+echo "Please enter root paritition (example /dev/sda3): "
 read ROOT
 
-echo "Please enter Home(/home) paritition: (example /dev/sda3)"
+echo "Please enter Home paritition (example /dev/sda3): "
 read HOME
 
-echo "Please enter W10(/W10) paritition: (example /dev/sda3)"
+echo "Please enter windows paritition (example /dev/sda3): "
 read WINDOWS
 
-echo "Please enter DVolume(/DVolume) paritition: (example /dev/sda3)"
+echo "Please enter DVolume paritition (example /dev/sda3): "
 read DVOLUME
 
 echo "Please enter root password"
 read ROOTPASS
 
-echo "Please enter your Username"
+echo "Please enter your username"
 read USER
 
-echo "Please enter your Password"
+echo "Please enter your password"
 read PASSWORD
 
 mkfs.ext4 "${ROOT}"
