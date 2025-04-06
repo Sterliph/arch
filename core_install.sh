@@ -33,7 +33,7 @@ mount --mkdir "$HOME" /mnt/home
 mount --mkdir "$WINDOWS" /mnt/W10
 mount --mkdir "$DVOLUME" /mnt/DVolume
 
-pacstrap /mnt base base-devel linux linux-firmware vim
+pacstrap -K /mnt base base-devel linux linux-firmware vim
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -50,10 +50,11 @@ hwclock --systohc
 echo "ACH" > /etc/hostname
 cat <<EOF > /etc/hosts
 127.0.0.1       localhost
-::1                     localhost
+::1             localhost
 127.0.1.1       ACH.localdomain    ACH
 EOF
 
+pacman -Syu
 pacman -S git curl fuse3 grub networkmanager linux-headers bluez bluez-utils pulseaudio pulseaudio-bluetooth amd-ucode os-prober
 sed -i 's/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 grub-install --target=i386-pc /dev/sda
@@ -64,7 +65,7 @@ systemctl enable bluetooth
 useradd -mG wheel $USER
 echo $USER:$PASSWORD | chpasswd
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-echo "root":ROOTPASS | chpasswd
+echo "root":${ROOTPASS} | chpasswd
 cd /home/${USER}
 git clone https://github.com/Sterliph/arch.git
 cd /var/cache/pacman/pkg
