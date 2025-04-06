@@ -27,6 +27,7 @@ mkinitcpio -P
 pacman -S xorg xorg-server xorg-xinit bspwm sxhkd rofi noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-liberation alacritty polybar pavucontrol  7zip mpv qbittorrent libreoffice-still htop flameshot feh telegram-desktop spotify-launcher
 yay -S google-chrome v2rayn
 
+tar -xvf .config.tar
 mv .config ~/
 mv .xinitrc ~/
 
