@@ -54,18 +54,23 @@ cat <<EOF > /etc/hosts
 127.0.1.1       ACH.localdomain    ACH
 EOF
 
-pacman -Syu
-pacman -S git curl fuse3 grub networkmanager linux-headers bluez bluez-utils pulseaudio pulseaudio-bluetooth amd-ucode os-prober
-sed -i 's/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+pacman -S git curl fuse3 ntfs-3g mtools dosfstools grub networkmanager linux-headers bluez bluez-utils pulseaudio pulseaudio-bluetooth amd-ucode os-prober
 grub-install --target=i386-pc /dev/sda
+sed -i 's/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-systemctl enable Networkmanager
+read STOP1
+
+systemctl enable NetworkManager
 systemctl enable bluetooth
 useradd -mG wheel $USER
 echo $USER:$PASSWORD | chpasswd
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 echo "root":${ROOTPASS} | chpasswd
+
+echo "reg pass on root"
+read STOP2
+
 cd /home/${USER}
 git clone https://github.com/Sterliph/arch.git
 cd /var/cache/pacman/pkg
