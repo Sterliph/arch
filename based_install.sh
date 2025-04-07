@@ -12,14 +12,25 @@ sed -i "s/^#IgnorePkg   =/IgnorePkg   = linux linux-headers/" /etc/pacman.conf
 echo "alias 'bt=bluetoothctl'" >> ~/.bashrc
 
 yay -Syu
+pacman -Syu
 
+cd /var/cache/pacman/pkg
+curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-6.11.5.arch1-1-x86_64.pkg.tar.zst -o linux-6.11.5.arch1-1-x86_64.pkg.tar.zst
+curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig -o linux-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig
+curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst -o linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst
+curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig -o linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig
+pacman -U file://linux-6.11.5.arch1-1-x86_64.pkg.tar.zst file://linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst
 yay -S nvidia-390xx-dkms nvidia-390xx-utils lib32-nvidia-390xx-utils nvidia-settings
 
+cd ~/arch
+
 rm /etc/default/grub
-mv ../grub /etc/default/
+mv grub /etc/default/
 
 rm /etc/mkinitcpio.conf
-mv ../mkinitcpio.conf /etc/
+mv mkinitcpio.conf /etc/
+
+mv hook.
 
 grub-mkconfig -o /boot/grub/grub.cfg
 mkinitcpio -P
