@@ -24,10 +24,7 @@ read PASSWORD
 mkfs.ext4 "${ROOT}"
 mkfs.ext4 "${HOME}"
 
-timedatectl set-ntp true
-timedatectl set-timezone Europe/Moscow
-
-# mount target
+# mount target and 50mb partition w10
 mount "${ROOT}" /mnt
 mount --mkdir "$HOME" /mnt/home
 mount --mkdir "$WINDOWS" /mnt/W10
