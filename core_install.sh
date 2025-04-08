@@ -59,4 +59,7 @@ useradd -mG wheel $USER
 echo "${USER}:${PASSWORD}" | chpasswd
 echo "root:${ROOTPASS}" | chpasswd
 
+cd /home/ster
+git clone https://github.com/Sterliph/arch.git
+
 echo "Just uncomment wheel into sudoers with visudo and reboot system, please."
