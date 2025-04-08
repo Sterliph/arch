@@ -6,11 +6,9 @@ read ROOT
 echo "Please enter Home partition (example /dev/sda3): "
 read HOME
 
-echo "Please enter windows partition (example /dev/sda3): "
-read WINDOWS
+echo "Please enter windows bootloader partition (example /dev/sda3):"
+read BOOTLOADER
 
-echo "Please enter DVolume partition (example /dev/sda3): "
-read DVOLUME
 
 echo "Please enter root password: "
 read ROOTPASS
@@ -21,21 +19,20 @@ read USER
 echo "Please enter your password: "
 read PASSWORD
 
-mkfs.ext4 "${ROOT}"
-mkfs.ext4 "${HOME}"
+mkfs.ext4 $ROOT
+mkfs.ext4 $HOME
 
 # mount target and 50mb partition w10
-mount "${ROOT}" /mnt
-mount --mkdir "$HOME" /mnt/home
-mount --mkdir "$WINDOWS" /mnt/W10
-mount --mkdir "$DVOLUME" /mnt/DVolume
+mount $ROOT /mnt
+mount --mkdir $HOME /mnt/home
+mount --mkdir $BOOTLOADER /mnt/bootloader_w10
 
 pacstrap -K /mnt base base-devel linux linux-firmware vim
 
 # fstab
 genfstab -U /mnt >> /mnt/etc/fstab
 
-arch-chroot
+arch-chroot /mnt
 
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
@@ -56,26 +53,10 @@ grub-install --target=i386-pc /dev/sda
 sed -i 's/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-read STOP1
-
 systemctl enable NetworkManager
 systemctl enable bluetooth
 useradd -mG wheel $USER
-echo $USER:$PASSWORD | chpasswd
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-echo "root":${ROOTPASS} | chpasswd
+echo "${USER}:${PASSWORD}" | chpasswd
+echo "root:${ROOTPASS}" | chpasswd
 
-echo "reg pass on root"
-read STOP2
-
-cd /home/${USER}
-git clone https://github.com/Sterliph/arch.git
-cd /var/cache/pacman/pkg
-curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-6.11.5.arch1-1-x86_64.pkg.tar.zst -o linux-6.11.5.arch1-1-x86_64.pkg.tar.zst
-curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig -o linux-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig
-curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst -o linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst
-curl https://archive.archlinux.org/repos/2024/10/31/core/os/x86_64/linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig -o linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst.sig
-pacman -U file://linux-6.11.5.arch1-1-x86_64.pkg.tar.zst file://linux-headers-6.11.5.arch1-1-x86_64.pkg.tar.zst
-exit
-umount -a
-reboot
+echo "Just uncomment wheel into sudoers with visudo and reboot system, please."
